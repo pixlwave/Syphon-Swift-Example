@@ -33,7 +33,7 @@ class ViewController: NSViewController {
         player = AVPlayer(url: Bundle.main.url(forResource: "video", withExtension: "mov")!)
         
         let bufferAttributes: [String: Any] = [
-            String(kCVPixelBufferPixelFormatTypeKey): Int(kCVPixelFormatType_32BGRA)
+            String(kCVPixelBufferPixelFormatTypeKey): Int(kCVPixelFormatType_32BGRA),
             String(kCVPixelBufferIOSurfacePropertiesKey): [String: AnyObject](),
             String(kCVPixelBufferOpenGLCompatibilityKey): true
         ]
