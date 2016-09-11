@@ -117,6 +117,7 @@
 				TargetAttributes = {
 					A590FDEB1C51775B000BED4A = {
 						CreatedOnToolsVersion = 7.2;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -269,6 +270,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.SyphonSwiftExample;
 				PRODUCT_NAME = "Syphon Swift Example";
 				SWIFT_OBJC_BRIDGING_HEADER = BridgingHeader.h;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -286,6 +288,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.SyphonSwiftExample;
 				PRODUCT_NAME = "Syphon Swift Example";
 				SWIFT_OBJC_BRIDGING_HEADER = BridgingHeader.h;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
