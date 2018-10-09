@@ -45,7 +45,7 @@ class ViewController: NSViewController {
         player?.play()
     }
     
-    func screenRefresh() {
+    @objc func screenRefresh() {
         let itemTime = videoOutput.itemTime(forHostTime: CACurrentMediaTime())
         if videoOutput.hasNewPixelBuffer(forItemTime: itemTime) {
             if let pixelBuffer = videoOutput.copyPixelBuffer(forItemTime: itemTime, itemTimeForDisplay: nil) {
@@ -65,6 +65,6 @@ class ViewController: NSViewController {
     }
     
     @IBAction func rewind(_ sender: AnyObject) {
-        player?.seek(to: kCMTimeZero)
+        player?.seek(to: CMTime.zero)
     }
 }
