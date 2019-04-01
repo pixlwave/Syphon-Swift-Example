@@ -117,13 +117,13 @@
 				TargetAttributes = {
 					A590FDEB1C51775B000BED4A = {
 						CreatedOnToolsVersion = 7.2;
-						LastSwiftMigration = 1000;
+						LastSwiftMigration = 1020;
 					};
 				};
 			};
 			buildConfigurationList = A590FDE71C51775B000BED4A /* Build configuration list for PBXProject "Syphon Swift Example" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
@@ -291,7 +291,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.SyphonSwiftExample;
 				PRODUCT_NAME = "Syphon Swift Example";
 				SWIFT_OBJC_BRIDGING_HEADER = BridgingHeader.h;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -309,7 +309,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.SyphonSwiftExample;
 				PRODUCT_NAME = "Syphon Swift Example";
 				SWIFT_OBJC_BRIDGING_HEADER = BridgingHeader.h;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
