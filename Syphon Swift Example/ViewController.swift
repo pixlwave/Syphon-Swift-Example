@@ -1,70 +1,77 @@
 import Cocoa
 import AVFoundation
+import Syphon
 
 class ViewController: NSViewController {
     
-    var displayTimer: Timer?
-    var context: NSOpenGLContext?
+    var displayLink: CVDisplayLink?
+    var device: MTLDevice!
     
     var player: AVPlayer?
     var videoOutput: AVPlayerItemVideoOutput!
-    var texture = GLuint()
-    var size = NSSize(width: 512, height: 512)
-    var syphonServer: SyphonServer?
+    var textureCache: CVMetalTextureCache?
+    var syphonServer: SyphonMetalServer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        displayTimer = Timer.scheduledTimer(timeInterval: 1 / 60, target: self, selector: #selector(screenRefresh), userInfo: nil, repeats: true)
-        
-        let contextAttributes: [NSOpenGLPixelFormatAttribute] = [
-            NSOpenGLPixelFormatAttribute(NSOpenGLPFADoubleBuffer),
-            NSOpenGLPixelFormatAttribute(NSOpenGLPFAColorSize), NSOpenGLPixelFormatAttribute(32),
-            NSOpenGLPixelFormatAttribute(0)
-        ]
-        
-        context = NSOpenGLContext(format: NSOpenGLPixelFormat(attributes: contextAttributes)!, share: nil)
-        context?.makeCurrentContext()
-        
-        if texture == 0 { glGenTextures(1, &texture) }
-        
-        syphonServer = SyphonServer(name: "Video", context: context!.cglContextObj, options: nil)
+        device = MTLCreateSystemDefaultDevice()
         
         player = AVPlayer(url: Bundle.main.url(forResource: "video", withExtension: "mov")!)
         
         let bufferAttributes: [String: Any] = [
             String(kCVPixelBufferPixelFormatTypeKey): Int(kCVPixelFormatType_32BGRA),
-            String(kCVPixelBufferIOSurfacePropertiesKey): [String: AnyObject](),
-            String(kCVPixelBufferOpenGLCompatibilityKey): true
+            String(kCVPixelBufferMetalCompatibilityKey): true
         ]
         
         videoOutput = AVPlayerItemVideoOutput(pixelBufferAttributes: bufferAttributes)
         videoOutput.suppressesPlayerRendering = true
         player?.currentItem?.add(videoOutput)
         
+        CVMetalTextureCacheCreate(nil, nil, device, nil, &textureCache)
+        
+        syphonServer = SyphonMetalServer(name: "Video", device: device)
+    }
+    
+    override func viewDidAppear() {
+        super.viewDidAppear()
+        
+        CVDisplayLinkCreateWithActiveCGDisplays(&displayLink)
+        CVDisplayLinkSetOutputCallback(displayLink!, { (displayLink, inNow, inOutputTime, flagsIn, flagsOut, displayLinkContext) -> CVReturn in
+            autoreleasepool {
+                // interpret displayLinkContext as this class to call functions
+                unsafeBitCast(displayLinkContext, to: ViewController.self).screenRefreshForTime(inOutputTime.pointee)
+            }
+            return kCVReturnSuccess
+        }, Unmanaged.passUnretained(self).toOpaque())
+        
+        CVDisplayLinkStart(displayLink!)
         player?.play()
     }
     
-    @objc func screenRefresh() {
-        let itemTime = videoOutput.itemTime(forHostTime: CACurrentMediaTime())
-        if videoOutput.hasNewPixelBuffer(forItemTime: itemTime) {
-            if let pixelBuffer = videoOutput.copyPixelBuffer(forItemTime: itemTime, itemTimeForDisplay: nil) {
-                if let surface = CVPixelBufferGetIOSurface(pixelBuffer)?.takeUnretainedValue() {
-                    
-                    size = NSSize(width: IOSurfaceGetWidth(surface), height: IOSurfaceGetHeight(surface))
-                    
-                    context?.makeCurrentContext()
-                    
-                    glBindTexture(GLenum(GL_TEXTURE_RECTANGLE_EXT), texture)
-                    CGLTexImageIOSurface2D(context!.cglContextObj!, GLenum(GL_TEXTURE_RECTANGLE_EXT), GLenum(GL_RGBA), GLsizei(size.width), GLsizei(size.height), GLenum(GL_BGRA), GLenum(GL_UNSIGNED_INT_8_8_8_8_REV), surface, 0)
-                }
-            }
-        }
+    func screenRefreshForTime(_ timestamp: CVTimeStamp) {
+        let itemTime = videoOutput.itemTime(for: timestamp)
         
-        syphonServer?.publishFrameTexture(texture, textureTarget: GLenum(GL_TEXTURE_RECTANGLE_EXT), imageRegion: NSRect(origin: CGPoint(x: 0, y: 0), size: size), textureDimensions: size, flipped: true)
+        guard videoOutput.hasNewPixelBuffer(forItemTime: itemTime),
+            let pixelBuffer = videoOutput.copyPixelBuffer(forItemTime: itemTime, itemTimeForDisplay: nil),
+            let textureCache = textureCache
+            else { return }
+        
+        var videoTexture: CVMetalTexture?
+        let width = CVPixelBufferGetWidth(pixelBuffer)
+        let height = CVPixelBufferGetHeight(pixelBuffer)
+        
+        guard
+            CVMetalTextureCacheCreateTextureFromImage(nil, textureCache, pixelBuffer, nil, .bgra8Unorm, width, height, 0, &videoTexture) == kCVReturnSuccess,
+            let newVideoTexture = videoTexture,
+            let texture = CVMetalTextureGetTexture(newVideoTexture)
+            else { return }
+        
+        syphonServer?.publishFrameTexture(texture)
     }
     
     @IBAction func rewind(_ sender: AnyObject) {
         player?.seek(to: CMTime.zero)
+        player?.play()
     }
 }

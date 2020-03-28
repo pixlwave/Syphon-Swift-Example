@@ -31,6 +31,8 @@
 #import "SyphonServer.h"
 #import "SyphonClient.h"
 #import "SyphonImage.h"
+#import "SyphonMetalServer.h"
+#import "SyphonMetalClient.h"
 
 /*! \mainpage Syphon Framework
  @section intro_sec Developing with Syphon
@@ -56,21 +58,21 @@
  
  The Syphon framework provides the classes necessary to add Syphon support to your application. SyphonServer is used to make frames available to other applications. SyphonServerDirectory is used to discover available servers. SyphonClient is used to connect to and receive frames from a SyphonServer.
  
- The framework <em>requires</em> MacOS X 10.6 or later. Syphon makes use of IOSurface, which is a 10.6-only technology. Syphon takes advantage of other 10.6 features such as blocks, and is compatible with garbage-collection.
+ The framework <em>requires</em> MacOS X 10.8 or later.
  
  To include Syphon in your application, follow these steps:
  
  <ol>
  <li><h4>Add the framework to your Xcode project.</h4>
- <p>The simplest way is to drag it to the Linked Frameworks group in the project window.</p></li>
+ <p>The simplest way is to drag it to the Frameworks group in the project window.</p></li>
  <li><h4>Link your application with Syphon at build time.</h4>
- <p>Add the framework to the Link Binary With Libraries build stage of your application's target.</p></li>
+ <p>Add the framework to the Link Binary With Libraries build phase of your application's target.</p></li>
  <li><h4>Copy the framework into your application's bundle.</h4>
  <p>Add a new Copy Files build phase to your application's target.<br/>
- Get Info on the build phase and select Frameworks as the destination.<br/>
+ Select Frameworks as the destination.<br/>
  Drag the Syphon framework into the build phase.</p></li>
  <li><h4>Import the headers.</h4>
- <p>#import &lt;Syphon/Syphon.h&gt; in any file where you want to use Syphon classes.</p></li>
+ <p>\#import &lt;Syphon/Syphon.h&gt; in any file where you want to use Syphon classes.</p></li>
  </ol>
  
  @section servers Servers
@@ -122,7 +124,7 @@
  Usually you create a client with a server description dictionary you obtained from SyphonServerDirectory:
  
  @code
- SyphonClient *myClient = [[SyphonClient alloc] initWithServerDescription:description options:nil newFrameHandler:^(SyphonClient *client) {
+ SyphonClient *myClient = [[SyphonClient alloc] initWithServerDescription:description context:cgl_ctx options:nil newFrameHandler:^(SyphonClient *client) {
 	[myView setNeedsDisplay:YES];
  }];
  @endcode
@@ -132,7 +134,7 @@
  When you are ready to draw:
  
  @code
- SyphonImage *myFrame = [myClient newFrameImageForContext:cgl_ctx];
+ SyphonImage *myFrame = [myClient newFrameImage];
  if (myFrame)
  {
 	GLuint tex = myFrame.textureName;
@@ -160,7 +162,7 @@
  </li>
  <li><h4>Define SYPHON_UNIQUE_CLASS_NAME_PREFIX using the Preprocessor Macros build setting.</h4>
  <p>Select the Syphon target in the project window.<br/>
- Get Info on the target, and click the Build tab to display the build settings.<br/>
+ Click the Build Settings tab to display the build settings.<br/>
  Scroll down (or use the search field) to find the Preprocessor Macros (GCC_PREPROCESSOR_DEFINITIONS) setting.<br/>
  Double click the setting to add SYPHON_UNIQUE_CLASS_NAME_PREFIX=MyPluginName as a macro.
  </p></li>
@@ -171,14 +173,25 @@
  
  @section help More examples and help
  
- Example projects implementing a server and client are included with the Syphon SDK. You can also examine the source to the provided Syphon implementations at their <a href="http://code.google.com/p/syphon-implementations/"  target="_blank">Google Code project</a>.
+ Example projects implementing a server and client are included with the Syphon SDK. You can also examine the source to some Syphon implementations on <a href="https://github.com/Syphon">GitHub</a>.
  
  Use the <a href="http://forums.v002.info/forum.php?id=7" target="_blank">Syphon developer forum</a> to ask questions, and for any development related discussion.
  
  Good luck!
- 
+
+ @section extending_syphon Extending Syphon
+
+ Syphon can be extended for any IOSurface-based technology using the Syphon Base classes without modifying the framework at all.
+
+ 1. Implement a new SyphonImage subclass by subclassing SyphonImageBase to expose the surface in your new format. This class should be a minimal wrapper to the contained type.
+ 2. Implement a server by subclassing SyphonServerBase. Add methods to your subclass to publish frames. When needed, call -copySurfaceForWidth: height: options: to obtain an IOSurface. When you have updated the surface, call -publish. Add a method named -newFrameImage which returns an instance of your SyphonImageBase subclass.
+ 3. Implement a client by subclassing SyphonClientBase. Add a method named -newFrameImage which returns an instance of your SyphonImageBase subclass. Implement the -invalidateFrame method, noting this may be called on a background thread.
+ 4. If you override other Syphon Base class methods, be sure to pass them on to the superclass (eg if you override -stop, call [super stop] from your implementation of -stop).
+
+ If your changes are for a well-used API, please consider making a pull-request or otherwise reaching out to us so we can add them to the project.
+
  @section framework_dev Framework development
  
- If you'd like to examine the framework's source code, report a bug, or get involved in development, head on over to the <a href="http://code.google.com/p/syphon-framework/" target="_blank">Syphon framework Google Code project.</a>
+ If you'd like to examine the framework's source code, report a bug, or get involved in development, head on over to the <a href="https://github.com/Syphon/Syphon-Framework">Syphon framework GitHub project.</a>
  
  */

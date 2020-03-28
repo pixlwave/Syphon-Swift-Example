@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		A53624FD1C518E3D00A0AB61 /* video.mov in Resources */ = {isa = PBXBuildFile; fileRef = A53624FC1C518E3D00A0AB61 /* video.mov */; };
-		A53624FE1C518F9500A0AB61 /* Syphon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A590FDFE1C517795000BED4A /* Syphon.framework */; };
-		A53624FF1C518F9500A0AB61 /* Syphon.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A590FDFE1C517795000BED4A /* Syphon.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A57D778E242FFDA20048AE21 /* Syphon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A57D778C242FFD9A0048AE21 /* Syphon.framework */; };
+		A57D778F242FFDA20048AE21 /* Syphon.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A57D778C242FFD9A0048AE21 /* Syphon.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A590FDF01C51775B000BED4A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A590FDEF1C51775B000BED4A /* AppDelegate.swift */; };
 		A590FDF21C51775B000BED4A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A590FDF11C51775B000BED4A /* ViewController.swift */; };
 		A590FDF41C51775B000BED4A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A590FDF31C51775B000BED4A /* Assets.xcassets */; };
@@ -23,7 +23,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				A53624FF1C518F9500A0AB61 /* Syphon.framework in Embed Frameworks */,
+				A57D778F242FFDA20048AE21 /* Syphon.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -32,14 +32,13 @@
 
 /* Begin PBXFileReference section */
 		A53624FC1C518E3D00A0AB61 /* video.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = video.mov; path = ../video.mov; sourceTree = "<group>"; };
+		A57D778C242FFD9A0048AE21 /* Syphon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Syphon.framework; sourceTree = "<group>"; };
 		A590FDEC1C51775B000BED4A /* Syphon Swift Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Syphon Swift Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A590FDEF1C51775B000BED4A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A590FDF11C51775B000BED4A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		A590FDF31C51775B000BED4A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A590FDF61C51775B000BED4A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A590FDF81C51775B000BED4A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A590FDFE1C517795000BED4A /* Syphon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Syphon.framework; sourceTree = "<group>"; };
-		A590FE001C5177AF000BED4A /* BridgingHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BridgingHeader.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,7 +46,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A53624FE1C518F9500A0AB61 /* Syphon.framework in Frameworks */,
+				A57D778E242FFDA20048AE21 /* Syphon.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,8 +58,7 @@
 			children = (
 				A590FDEE1C51775B000BED4A /* Syphon Swift Example */,
 				A590FDED1C51775B000BED4A /* Products */,
-				A590FE001C5177AF000BED4A /* BridgingHeader.h */,
-				A590FDFE1C517795000BED4A /* Syphon.framework */,
+				A57D778C242FFD9A0048AE21 /* Syphon.framework */,
 			);
 			sourceTree = "<group>";
 		};
@@ -113,7 +111,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0720;
-				LastUpgradeCheck = 1100;
+				LastUpgradeCheck = 1140;
 				TargetAttributes = {
 					A590FDEB1C51775B000BED4A = {
 						CreatedOnToolsVersion = 7.2;
@@ -290,7 +288,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.SyphonSwiftExample;
 				PRODUCT_NAME = "Syphon Swift Example";
-				SWIFT_OBJC_BRIDGING_HEADER = BridgingHeader.h;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -308,7 +305,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.SyphonSwiftExample;
 				PRODUCT_NAME = "Syphon Swift Example";
-				SWIFT_OBJC_BRIDGING_HEADER = BridgingHeader.h;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
